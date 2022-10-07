@@ -1,5 +1,6 @@
 package com.wilmak.msvc.usuarios.msvc_usuarios.services;
 
+import com.wilmak.msvc.usuarios.msvc_usuarios.client.CourseClientRest;
 import com.wilmak.msvc.usuarios.msvc_usuarios.models.User;
 import com.wilmak.msvc.usuarios.msvc_usuarios.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CourseClientRest clientRest;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,6 +41,13 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+        clientRest.deleteCourseUserById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findAllUsersByIds(Iterable<Long> ids) {
+        return (List<User>) userRepository.findAllById(ids);
     }
 
     @Override

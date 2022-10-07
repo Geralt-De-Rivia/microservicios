@@ -91,6 +91,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/usersCourse")
+    public ResponseEntity<?> getUsersCourse(@RequestParam List<Long> ids){
+        return ResponseEntity.ok(userService.findAllUsersByIds(ids));
+    }
+
     private ResponseEntity<Map<String, String>> validators(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
         result.getFieldErrors().forEach(fieldError -> {

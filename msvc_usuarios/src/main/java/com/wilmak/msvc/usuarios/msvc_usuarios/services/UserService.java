@@ -10,5 +10,6 @@ public interface UserService {
     Optional<User> findUserById(Long id);
     User saveUser(User user);
     void deleteUser(Long id);
+    List<User> findAllUsersByIds(Iterable<Long> ids);
     Optional<User> findUserByEmail(String email);
 }
