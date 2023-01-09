@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "msvc-usuarios", url = "localhost:8001")
+@FeignClient(name = "msvc-usuarios", url = "${msvc.usuarios.url}")
 public interface UserClientRest {
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id);
+    User getUser(@PathVariable Long id);
 
     @PostMapping
-    public User save(@RequestBody User user);
+    User save(@RequestBody User user);
 
     @GetMapping("/usersCourse")
-    public List<User> getUsersCourse(@RequestParam Iterable<Long> ids);
+    List<User> getUsersCourse(@RequestParam Iterable<Long> ids);
 }

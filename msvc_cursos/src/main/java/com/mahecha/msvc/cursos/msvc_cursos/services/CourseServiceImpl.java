@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService{
@@ -56,23 +55,24 @@ public class CourseServiceImpl implements CourseService{
     @Transactional
     public Optional<User> assignUser(User user, Long courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if (optionalCourse.isEmpty()){
-            return Optional.empty();
+        if (optionalCourse.isPresent()){
+            User userMsvc = clientRest.getUser(user.getUser_id());
+            Course course = optionalCourse.get();
+            CourseUser courseUser = new CourseUser();
+            courseUser.setUserId(userMsvc.getUser_id());
+
+            course.addCourseUser(courseUser);
+            courseRepository.save(course);
+            return Optional.of(userMsvc);
         }
-        User userMsvc = clientRest.getUser(user.getUser_id());
-        Course course = optionalCourse.get();
-        CourseUser courseUser = new CourseUser();
-        courseUser.setUserId(userMsvc.getUser_id());
-        course.addCourseUser(courseUser);
-        courseRepository.save(course);
-        return Optional.of(userMsvc);
+        return Optional.empty();
     }
 
     @Override
     @Transactional
     public Optional<User> createUser(User user, Long courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if (!optionalCourse.isPresent()){
+        if (optionalCourse.isEmpty()){
             return Optional.empty();
         }
 
@@ -91,19 +91,17 @@ public class CourseServiceImpl implements CourseService{
     @Transactional
     public Optional<User> deleteUser(User user, Long courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if (!optionalCourse.isPresent()){
-            return Optional.empty();
+        if (optionalCourse.isPresent()){
+            User userMsvc = clientRest.getUser(user.getUser_id());
+            Course course = optionalCourse.get();
+            CourseUser courseUser = new CourseUser();
+            courseUser.setUserId(userMsvc.getUser_id());
+
+            course.removeCourseUser(courseUser);
+            courseRepository.save(course);
+            return Optional.of(userMsvc);
         }
-
-        User userMsvc = clientRest.getUser(user.getUser_id());
-
-        Course course = optionalCourse.get();
-        CourseUser courseUser = new CourseUser();
-        courseUser.setUserId(userMsvc.getUser_id());
-
-        course.removeCourseUser(courseUser);
-        courseRepository.save(course);
-        return Optional.of(userMsvc);
+        return Optional.empty();
     }
 
 

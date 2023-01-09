@@ -5,6 +5,8 @@ import com.mahecha.msvc.cursos.msvc_cursos.models.User;
 import com.mahecha.msvc.cursos.msvc_cursos.services.CourseService;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,9 +20,17 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private ApplicationContext context;
+
+    @GetMapping("/crash")
+    public void crash() {
+        ((ConfigurableApplicationContext)context).close();
+    }
+
     @GetMapping()
-    public ResponseEntity<List<Course>> getCourses() {
-        return ResponseEntity.ok(courseService.findByAllCourse());
+    public Map<String, List<Course>> getCourses() {
+        return Collections.singletonMap("courses", courseService.findByAllCourse());
     }
 
     @GetMapping("/{id}")
@@ -69,7 +79,7 @@ public class CourseController {
     }
 
     @PutMapping("/assignUser/{course_id}")
-    public ResponseEntity<?> assignUser(@RequestBody User user, BindingResult result, @PathVariable Long course_id){
+    public ResponseEntity<?> assignUser(@RequestBody User user, @PathVariable Long course_id){
         Optional<User> optionalUser;
         try {
             optionalUser = courseService.assignUser(user, course_id);
@@ -124,9 +134,7 @@ public class CourseController {
 
     private ResponseEntity<Map<String, String>> validators(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
-        result.getFieldErrors().forEach(fieldError -> {
-            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        });
+        result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
 }

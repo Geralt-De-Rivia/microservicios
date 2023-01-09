@@ -1,0 +1,78 @@
+https://kubernetes.io/docs/tasks/tools/
+https://minikube.sigs.k8s.io/docs/start/
+
+//Instalar Chocolatey para instalar kubectl. Abrir la power Shell como administrador y copiar el comando:
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+//Instalar kubectl
+choco install kubernetes-cli
+
+//Verificar la Version
+kubectl version --client
+
+//Ir al directorio de inicio con la terminal de CMD
+cd %USERPROFILE%
+
+//Crear el directorio
+mkdir .kube
+
+//Entrar al directorio creado 
+cd .kube
+
+//Crear un archivo config con Power Shell
+New-Item config -type file
+
+//Instalar Minikube con chocolatey
+choco install minikube
+
+//Inicializar minikube con el driver indicado en este caso Hyper-v
+minikube start --driver=hyperv 
+
+//Ver opciones de kubectl
+kubectl help
+
+//Crear un DEPLOYMENT de manera IMPERATIVA para MYSQL donde la imagen de DockerHub es la mysql8.
+kubectl create deployment mysql8 --image=mysql:8 --port=3306
+
+//Obtener listado de los deployments
+kubectl get deployments
+
+//Obtener listado de Pods
+kubectl get pods
+
+//Obtener detalles de un deployment en particular
+kubectl describe deployment NombreDeployment
+
+//Obtener detalles de un pod en particular
+kubectl describe pod NombrePod
+
+//Obtener logs de pod en particular
+kubectl logs NombrePod
+
+//Crear archivo de configuracion de deploy de MYSQL
+kubectl create deployment mysql8 --image=mysql:8 --port=3306 --dry-run=client -o yaml > NombreArchivo.yaml
+
+//Para evitar que nos falle la descarga de la imagen en kubectl la descargamos primero en el minikube
+minikube ssh docker pull mysql:8
+
+//Crear un servicio en kubectl para acceder y/o tener comunicacion con los deployments en este caso con MYSQL8
+kubectl expose deployment mysql8 --port=3306 --type=ClusterIP
+
+//Obtener los servicios creados
+kubectl get services
+
+//Ver mas detalles del service
+kubectl describe service NombreService
+
+//Ver el listado de todo lo que se ha creado hasta el momento tanto deploy, pods, services etc.
+kubectl get all
+
+//Crear un servicio en kubectl para acceder y/o tener comunicacion con los deployments en este caso con MSVC-CURSOS
+kubectl expose deployment msvc-cursos --port=8002 --type=LoadBalancer
+
+//Obtener la IP Externa de minikube para poder acceder al Servicio creado como type LoadBalancer
+minikube service NombreServicio --url
+
+//Actualizar la imagen de un deployment creado 
+//RECORDAR que esta el fallo al descargar imagen despues de este comando ingresar el de minikube image pull nombreImagen:tag 
+kubectl set image deployment nombreDeploy nombreContenedor=nombreImagen:tagNuevo
