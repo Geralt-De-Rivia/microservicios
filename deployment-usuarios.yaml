@@ -38,13 +38,13 @@ spec:
               #value: msvc_usuarios
             - name: DB_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: db_username
                   name: msvc-usuarios
               #value: postgres
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: db_password
                   name: msvc-usuarios
               #value: postgres

@@ -22,16 +22,16 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: db_password
                   name: msvc-cursos
               #value: root
             - name: MYSQL_DATABASE
-              #value: msvc_cursos
               valueFrom:
                 configMapKeyRef:
                   key: db_database
                   name: msvc-cursos
+              #value: msvc_cursos
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: data-mysql
