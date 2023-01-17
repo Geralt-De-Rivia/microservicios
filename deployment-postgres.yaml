@@ -19,9 +19,17 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_PASSWORD
-              value:  postgres
+              valueFrom:
+                configMapKeyRef:
+                  key: db_password
+                  name: msvc-usuarios
+              #value:  postgres
             - name: POSTGRES_DB
-              value: msvc_usuarios
+              valueFrom:
+                configMapKeyRef:
+                  key: db_database
+                  name: msvc-usuarios
+              #value: msvc_usuarios
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: data-postgres
