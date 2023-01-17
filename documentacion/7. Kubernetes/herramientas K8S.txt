@@ -76,3 +76,18 @@ minikube service NombreServicio --url
 //Actualizar la imagen de un deployment creado 
 //RECORDAR que esta el fallo al descargar imagen despues de este comando ingresar el de minikube image pull nombreImagen:tag 
 kubectl set image deployment nombreDeploy nombreContenedor=nombreImagen:tagNuevo
+
+//Realizar una replica al DEPLOY
+kubectl scale deployment nombreDeploy --replicas=numeroReplicas (ejemplo: 3)
+
+//Crear Archivo de configuracion de un deployment en YAML
+kubectl create deployment nombreDeploy --image=nombreImagen:latest --port=numeroPuerto --dry-run=client -o yaml > nombreArchivo.yaml
+
+//Crear archivo yaml para configuracion de servicio imperativo
+kubectl get service nombreServicio -o yaml > nombreArchivo.yaml
+
+//Eliminar deployment asociado a una configuracion
+kubectl delete -f .\NombreArchivo.yaml
+
+//Utilizar archivo de configurar para creacion de deploy
+kubectl apply -f .\nombreArchivo.yaml

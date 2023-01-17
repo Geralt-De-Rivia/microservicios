@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: msvc-cursos
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: msvc-cursos
@@ -23,7 +23,7 @@ spec:
           - name: DB_HOST
             value: "mysql8:3306"
           - name: DB_DATABASE
-            value: msvc-cursos
+            value: msvc_cursos
           - name: DB_USERNAME
             value: root
           - name: DB_PASSWORD

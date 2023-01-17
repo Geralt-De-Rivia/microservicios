@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: msvc-usuarios
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: msvc-usuarios
@@ -28,5 +28,5 @@ spec:
               value: postgres
             - name: DB_PASSWORD
               value: postgres
-            - name: USUARIOS_URL
+            - name: CURSOS_URL
               value: msvc-cursos:8002
